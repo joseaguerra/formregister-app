@@ -10,9 +10,51 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Todo {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  text      String
-  completed Boolean
+model Customer {
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  name      String
+  surname   String
+  phone     Number
+  email     String      @unique
+  address   Address     @relation(fields: [addressId], references: [id])
+  addressId String
+  nif       String      @unique
+  childs    Child[]
+  updatedAt DateTime?
+}
+
+model Child {
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  name      String
+  surname   String
+  birthday  DateTime
+  customer  Customer[]
+  updatedAt DateTime?
+}
+
+model ChildsOnCustomers {
+  customer      Customer    @relation(fields: [customerId], references: [id])
+  customerId    String
+  child         Child       @relation(fields: [childId], references: [id])
+  childId       String
+  role          Role
+
+  @@id([customerId, childId])
+}
+
+model Address {
+  id            String      @id @default(uuid())
+  street        String
+  city          String
+  province      String
+  postalCode    Int
+}
+
+enum Role {
+    PARENT
+    GUARDIAN
+    SISTER
+    BROTHER
 }
