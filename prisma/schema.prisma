@@ -11,50 +11,53 @@ generator client {
 }
 
 model Customer {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  name      String
-  surname   String
-  phone     Number
-  email     String      @unique
-  address   Address     @relation(fields: [addressId], references: [id])
-  addressId String
-  nif       String      @unique
-  childs    Child[]
-  updatedAt DateTime?
+  id                String              @id @default(uuid())
+  createdAt         DateTime            @default(now())
+  name              String
+  surname           String
+  phone             Int
+  email             String              @unique
+  address           Address             @relation(fields: [addressId], references: [id])
+  addressId         String
+  nif               String              @unique
+  childs            Child[]
+  updatedAt         DateTime?
+  ChildsOnCustomers ChildsOnCustomers[]
 }
 
 model Child {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  name      String
-  surname   String
-  birthday  DateTime
-  customer  Customer[]
-  updatedAt DateTime?
+  id                String              @id @default(uuid())
+  createdAt         DateTime            @default(now())
+  name              String
+  surname           String
+  birthday          DateTime
+  customer          Customer[]
+  updatedAt         DateTime?
+  ChildsOnCustomers ChildsOnCustomers[]
 }
 
 model ChildsOnCustomers {
-  customer      Customer    @relation(fields: [customerId], references: [id])
-  customerId    String
-  child         Child       @relation(fields: [childId], references: [id])
-  childId       String
-  role          Role
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId String
+  child      Child    @relation(fields: [childId], references: [id])
+  childId    String
+  role       Role
 
   @@id([customerId, childId])
 }
 
 model Address {
-  id            String      @id @default(uuid())
-  street        String
-  city          String
-  province      String
-  postalCode    Int
+  id         String     @id @default(uuid())
+  street     String
+  city       String
+  province   String
+  postalCode Int
+  Customer   Customer[]
 }
 
 enum Role {
-    PARENT
-    GUARDIAN
-    SISTER
-    BROTHER
+  PARENT
+  GUARDIAN
+  SISTER
+  BROTHER
 }
